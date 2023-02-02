@@ -2,7 +2,7 @@ const ROCK = "Rock";
 const PAPER = "Paper";
 const SCISSORS = "Scissors";
 
-const LOOKUP_ROCK_PAPER_SCISSORS = [ROCK, PAPER , SCISSORS];
+const LOOKUP_ROCK_PAPER_SCISSORS = [ROCK, PAPER, SCISSORS];
 
 
 
@@ -16,7 +16,7 @@ function playRound(playerSelection, computerSelection)
 
     if(playerSelectionNormalized == computerSelection)
     {
-        return `Draw! ${playerSelectionNormalized} vs ${computerSelection}`;
+        return {resultString: `Draw! ${playerSelectionNormalized} vs ${computerSelection}`, hasWon: null};
     }
 
     
@@ -24,17 +24,21 @@ function playRound(playerSelection, computerSelection)
     const WON = 'You won!';
     const LOST = 'You lost';
 
+    let outcome = {};
+
     if (playerSelectionNormalized == ROCK && computerSelection == PAPER ||
         playerSelectionNormalized == PAPER && computerSelection == SCISSORS ||
         playerSelectionNormalized == SCISSORS && computerSelection == ROCK)
-            outcome = concatOutcomeString(LOST, computerSelection, playerSelectionNormalized);
+        {
+            outcome = {resultString: concatOutcomeString(LOST, computerSelection, playerSelectionNormalized), hasWon: false};
+        }
     else if (
         playerSelectionNormalized == ROCK && computerSelection == SCISSORS ||
         playerSelectionNormalized == PAPER && computerSelection == ROCK ||
         playerSelectionNormalized == SCISSORS && computerSelection == PAPER)
-            outcome = concatOutcomeString(WON, playerSelectionNormalized, computerSelection);
+            outcome = {resultString: concatOutcomeString(WON, playerSelectionNormalized, computerSelection), hasWon: true};
     else
-        outcome = 'invalid player input';
+        outcome = {resultString: 'invalid player input', hasWon: null};
     
 
     return outcome;
@@ -50,6 +54,7 @@ function playRound(playerSelection, computerSelection)
     {
         return `${ifwon} ${selectionWinner} beats ${selectionLoser}`;
     }
+
 
 }
 
@@ -70,20 +75,52 @@ function getComputerChoice()
 }
 
 
-console.log(playRound('rock', PAPER));
-console.log(playRound('paper', SCISSORS));
-console.log(playRound('SCIssors', ROCK));
 
 
-console.log(playRound('SCIssOrs', PAPER));
-console.log(playRound('rOcK', SCISSORS));
-console.log(playRound('PaPER', ROCK));
+function startRound()
+{
+    let playerChoice = prompt('Enter rock, paper, or scissors');
+    let computerChoice = getComputerChoice();
 
 
-console.log(playRound('PaER', ROCK));
-console.log(playRound('Rock', ROCK));
+    let outcome = playRound(playerChoice, computerChoice);
+    console.log('\n' + outcome.resultString);
+    
+
+    return outcome.hasWon;
+}
 
 
-for(let i = 0; i < 100; ++i)
-    console.log(getComputerChoice());
+function game()
+{
 
+    const Score_REQUIRED = 5;
+    console.log(`first to win ${Score_REQUIRED} times is the ultimate winner`);
+
+    let playerScore = 0;
+    let computerScore = 0;
+
+
+
+    while(playerScore < Score_REQUIRED && computerScore < Score_REQUIRED)
+    {
+        switch (startRound())
+        {
+            case null:
+                break;
+            case true:
+                ++playerScore;
+                break;
+            case false:
+                ++computerScore;
+                break;
+        }
+
+        console.log(`Player/Computer Score: ${playerScore} : ${computerScore}`);
+    }
+
+    console.log((playerScore > computerScore ? "Player" : "Computer") + " wins!");
+}
+
+
+game();
