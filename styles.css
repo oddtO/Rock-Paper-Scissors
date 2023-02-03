@@ -1,0 +1,50 @@
+* 
+{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+body 
+{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 80px;
+}
+
+body h1
+{
+    font-size: 60px;
+}
+
+#scores
+{
+    font-size: 60px;
+    display: flex;
+    flex-wrap: wrap;
+    white-space: pre;
+}
+
+#choiceResult
+{
+    font-size: 30px;
+}
+
+
+#playerChoiceButtons button
+{
+    width: 20vw;
+    height: 20vw;
+    background-color: green;
+    color: white;
+    font-weight: 900;
+    font-size: 40px;
+    min-width: min-content;
+    min-height: min-content;
+}
+
+
