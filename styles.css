@@ -45,6 +45,18 @@ body h1
     font-size: 40px;
     min-width: min-content;
     min-height: min-content;
+    cursor: pointer;
+
+    transition: transform .2s;
 }
 
+#playerChoiceButtons button:hover
+{
+    transform: translateY(-10px);
+}
+
+#playerChoiceButtons button:active
+{
+    transform: translateY(10px);
+}
 
