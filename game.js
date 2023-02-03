@@ -3,12 +3,14 @@
 
 (function ()
 {
+
     const ROCK = "Rock";
     const PAPER = "Paper";
     const SCISSORS = "Scissors";
 
     const LOOKUP_ROCK_PAPER_SCISSORS = [ROCK, PAPER, SCISSORS];
 
+    const WINNING_SCORE = 5;
 
 
 
@@ -16,12 +18,10 @@
     {
 
 
-        playerSelectionNormalized = normalizeInput(playerSelection);
 
-
-        if(playerSelectionNormalized == computerSelection)
+        if(playerSelection == computerSelection)
         {
-            return {resultString: `Draw! ${playerSelectionNormalized} vs ${computerSelection}`, hasWon: null};
+            return {resultString: `Draw! ${playerSelection} vs ${computerSelection}`, hasWon: null};
         }
 
         
@@ -31,29 +31,22 @@
 
         let outcome = {};
 
-        if (playerSelectionNormalized == ROCK && computerSelection == PAPER ||
-            playerSelectionNormalized == PAPER && computerSelection == SCISSORS ||
-            playerSelectionNormalized == SCISSORS && computerSelection == ROCK)
+        if (playerSelection == ROCK && computerSelection == PAPER ||
+            playerSelection == PAPER && computerSelection == SCISSORS ||
+            playerSelection == SCISSORS && computerSelection == ROCK)
             {
-                outcome = {resultString: concatOutcomeString(LOST, computerSelection, playerSelectionNormalized), hasWon: false};
+                outcome = {resultString: concatOutcomeString(LOST, computerSelection, playerSelection), hasWon: false};
             }
         else if (
-            playerSelectionNormalized == ROCK && computerSelection == SCISSORS ||
-            playerSelectionNormalized == PAPER && computerSelection == ROCK ||
-            playerSelectionNormalized == SCISSORS && computerSelection == PAPER)
-                outcome = {resultString: concatOutcomeString(WON, playerSelectionNormalized, computerSelection), hasWon: true};
+            playerSelection == ROCK && computerSelection == SCISSORS ||
+            playerSelection == PAPER && computerSelection == ROCK ||
+            playerSelection == SCISSORS && computerSelection == PAPER)
+                outcome = {resultString: concatOutcomeString(WON, playerSelection, computerSelection), hasWon: true};
         else
             outcome = {resultString: 'invalid player input', hasWon: null};
         
 
         return outcome;
-
-
-        function normalizeInput(playerSelection)
-        {
-            return playerSelection[0].toUpperCase() + playerSelection.slice(1).toLowerCase();
-
-        }
 
         function concatOutcomeString(ifwon, selectionWinner, selectionLoser)
         {
@@ -82,36 +75,61 @@
 
 
 
-    function startRound()
-    {
-        let playerChoice = prompt('Enter rock, paper, or scissors');
-        let computerChoice = getComputerChoice();
-
-
-        let outcome = playRound(playerChoice, computerChoice);
-        console.log('\n' + outcome.resultString);
-        
-
-        return outcome.hasWon;
-    }
-
-
-
-/*     function game()
+    let game = (function()
     {
 
-        const Score_REQUIRED = 5;
-        console.log(`first to win ${Score_REQUIRED} times is the ultimate winner`);
 
         let playerScore = 0;
         let computerScore = 0;
 
+        let lastOutcome = '';
 
+        let playerScoreElement = document.querySelector('#playerScore');
+        let computerScoreElement = document.querySelector('#computerScore');
 
-        while(playerScore < Score_REQUIRED && computerScore < Score_REQUIRED)
+        let choiceButtons = document.querySelector('#playerChoiceButtons');
+
+        let choiceOutcomeElement = document.querySelector('#choiceOutcome');
+
+        choiceButtons.addEventListener('click', start);
+
+        function render()
         {
-            switch (startRound())
+
+
+            playerScoreElement.textContent = playerScore;
+            computerScoreElement.textContent = computerScore;
+
+            choiceOutcomeElement.textContent = lastOutcome;
+
+        }
+
+
+        function startRound(playerChoice)
+        {
+            let computerChoice = getComputerChoice();
+    
+            let outcome = playRound(playerChoice, computerChoice);
+
+            lastOutcome = outcome.resultString;
+            return outcome.hasWon;
+        
+        }
+
+        function isScoreBreached()
+        {
+            return playerScore >= WINNING_SCORE || computerScore >= WINNING_SCORE;
+        }
+
+        function start(event)
+        {
+            if(isScoreBreached())
             {
+                playerScore = computerScore = 0;
+            }
+            switch(startRound(event.target.dataset.choice))
+            {
+                
                 case null:
                     break;
                 case true:
@@ -120,30 +138,21 @@
                 case false:
                     ++computerScore;
                     break;
+                
             }
 
-            console.log(`Player/Computer Score: ${playerScore} : ${computerScore}`);
+            if(isScoreBreached())
+            {
+                lastOutcome = (playerScore > computerScore ? "Player" : "Computer") + " wins!";
+            }
+
+            render();
+
+
+            
         }
-
-        console.log((playerScore > computerScore ? "Player" : "Computer") + " wins!");
-    } */
-
-
-    let game = (function()
-    {
-        let playerScore = 0;
-        let computerScore = 0;
-
-        function renderScores()
-        {
-            let playerScoreElement = document.querySelector('#playerScore');
-            let computerScoreElement = document.querySelector('#computerScore');
-
-            playerScoreElement.textContent = playerScore;
-            computerScoreElement.textContent = computerScore;
-        }
-        return {renderScores};
     })();
 
-    game.renderScores();
+
+
 })();
