@@ -82,7 +82,7 @@
         let playerScore = 0;
         let computerScore = 0;
 
-        let lastOutcome = '';
+        let lastOutcome = {resultString: '', hasWon: null};
 
         let playerScoreElement = document.querySelector('#playerScore');
         let computerScoreElement = document.querySelector('#computerScore');
@@ -100,7 +100,24 @@
             playerScoreElement.textContent = playerScore;
             computerScoreElement.textContent = computerScore;
 
-            choiceOutcomeElement.textContent = lastOutcome;
+            choiceOutcomeElement.textContent = lastOutcome.resultString;
+
+            switch(lastOutcome.hasWon)
+            {
+                
+                case null:
+                    choiceOutcomeElement.className = 'draw';
+                    break;
+                case true:
+                    choiceOutcomeElement.className = 'won';
+                    break;
+                case false:
+                    choiceOutcomeElement.className = 'lost';
+                    break;
+                
+            }
+                
+
 
         }
 
@@ -109,10 +126,7 @@
         {
             let computerChoice = getComputerChoice();
     
-            let outcome = playRound(playerChoice, computerChoice);
-
-            lastOutcome = outcome.resultString;
-            return outcome.hasWon;
+            lastOutcome = playRound(playerChoice, computerChoice);
         
         }
 
@@ -127,7 +141,8 @@
             {
                 playerScore = computerScore = 0;
             }
-            switch(startRound(event.target.dataset.choice))
+            startRound(event.target.dataset.choice);
+            switch(lastOutcome.hasWon)
             {
                 
                 case null:
@@ -143,7 +158,7 @@
 
             if(isScoreBreached())
             {
-                lastOutcome = (playerScore > computerScore ? "Player" : "Computer") + " wins!";
+                lastOutcome.resultString = (playerScore > computerScore ? "Player" : "Computer") + " wins!";
             }
 
             render();

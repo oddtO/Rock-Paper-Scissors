@@ -34,6 +34,26 @@ body h1
     font-size: 30px;
 }
 
+#choiceOutcome[class]
+{
+    font-weight: 900;
+}
+
+.lost#choiceOutcome
+{
+    color: red;
+}
+
+.won#choiceOutcome
+{
+    color: green;
+}
+
+.draw#choiceOutcome
+{
+    color: orange;
+}
+
 
 #playerChoiceButtons button
 {
